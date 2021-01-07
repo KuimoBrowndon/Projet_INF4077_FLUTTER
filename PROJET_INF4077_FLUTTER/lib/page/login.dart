@@ -1,7 +1,10 @@
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testo/constants.dart';
+
+import 'homepage.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -15,19 +18,111 @@ class _LoginScreenState extends State<LoginScreen> {
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String> _loginUser(LoginData data) {
-  
+  print("je logue man ");
+     return Future.delayed(loginTime).then((_) async{
+      if (await demandeUserName(data)==false) {
+        return 'user existe pas ';
+      }
+      if (await demandeUserNamePass(data)==false) {
+        return 'Password does not match';
+      }
+      return null;
+    });
   }
 
+    Future<String> _enregistrementUser(LoginData data) {
+  print("je logue man ");
+     return Future.delayed(loginTime).then((_) async {
+      if (await enregistrement( data)==false) {
+        return 'user registration no';
+      }
+     
+      return null;
+    });
+  }
+Future<bool>enregistrement(LoginData data) async {
+   SharedPreferences pref =
+        await SharedPreferences.getInstance();
+       
+         SharedPreferences pref2 =
+        await SharedPreferences.getInstance();
+       
+
+        return await pref2.setString("password", data.password)&& await pref.setString("name", data.name);
+}
+  
+  Future<bool>demandeUserName(LoginData data) async {
+   SharedPreferences pref =
+        await SharedPreferences.getInstance();
+       
+     String x=    pref.getString("name");
+       if(x==null){
+         return false;
+       }
+
+       if(x!=data.name){
+         return false;
+       }else{
+         return true;
+       }
+
+        
+}
+  
+    Future<bool>demandeUserNamePass(LoginData data) async {
+   SharedPreferences pref =
+        await SharedPreferences.getInstance();
+       
+     String x=    pref.getString("name");
+     String y=    pref.getString("password");
+       if(x==null||y==null){
+         return false;
+       }
+
+       if(x!=data.name&&y!=data.password){
+         return false;
+       }else{
+         return true;
+       }
+
+        
+}
+      Future<bool>changePass(String username,String password) async {
+   SharedPreferences pref =
+        await SharedPreferences.getInstance();
+       
+     String x=    pref.getString("name");
+     //String y=    pref.getString("password");
+       if(x==null){
+         return false;
+       }
+
+       if(x!=username){
+         return false;
+       }else{
+           SharedPreferences pref2 =
+        await SharedPreferences.getInstance();
+        
+         return await pref2.setString("password", password);
+       }
+
+        
+}
+  
+  
+  
   Future<String> _recoverPassword(String name) {
-    
+       return Future.delayed(loginTime).then((_)async {
+      if (await changePass(name,"00000000")==false) {
+        return 'Username not exists';
+      }
+      return null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder = BorderRadius.vertical(
-      bottom: Radius.circular(10.0),
-      top: Radius.circular(20.0),
-    );
+  
 
     return Scaffold(
        appBar: AppBar(
@@ -131,15 +226,22 @@ body:  Container(
         //     // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
         //   ),
         // ),
+        messages:LoginMessages(
+recoverPasswordSuccess: "ton pas a changer man"
+        ) ,
+        theme: LoginTheme(
+
+        ),
+        
         emailValidator: (value) {
           if (!value.contains('@') || !value.endsWith('.com')) {
-            return "Email must contain '@' and end with '.com'";
-          }
-          return null;
+          return "Email must contain '@' and end with '.com'";
+        }
+        return null;
         },
         passwordValidator: (value) {
           if (value.isEmpty) {
-            return 'Password is empty';
+            return 'entrer votre pass';
           }
           return null;
         },
@@ -153,10 +255,13 @@ body:  Container(
           print('Signup info');
           print('Name: ${loginData.name}');
           print('Password: ${loginData.password}');
-          return _loginUser(loginData);
+          return _enregistrementUser(loginData);
         },
         onSubmitAnimationCompleted: () {
          print('ici login ok ');
+            Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage(title: "yooo",)));
         },
         onRecoverPassword: (name) {
           print('Recover password info');
@@ -164,6 +269,7 @@ body:  Container(
           return _recoverPassword(name);
           // Show new password dialog
         },
+
        // showDebugButtons: true,
       ),
     ),
