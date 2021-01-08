@@ -3,6 +3,7 @@ import 'package:testo/components/container_card_homepage.dart';
 
 import '../constants copy.dart';
 import 'RegisterPatient.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -35,8 +36,9 @@ class _MyHomePageState extends State<HomePage> {
       _counter++;
     });
   }
- Size size;
- Color color;
+
+  Size size;
+  Color color;
   Widget build(BuildContext context) {
     this.color = kPrimaryColor;
     size = MediaQuery.of(context).size;
@@ -69,17 +71,34 @@ class _MyHomePageState extends State<HomePage> {
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
                 children: <Widget>[
-              
-                    ContainerCardHomePage(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegisterPatient()));
-                        },
-                        icon: Icons.people,
-                        libelle: 'Entreprises'),
-           ],
+                  ContainerCardHomePage(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPatient()));
+                      },
+                      icon: Icons.people,
+                      libelle: 'Patients'),
+                  ContainerCardHomePage(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      icon: Icons.people,
+                      libelle: 'Statistiques'),
+                  ContainerCardHomePage(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      icon: Icons.people,
+                      libelle: 'Deconnexion'),
+                ],
               ),
             ),
           )
@@ -87,5 +106,4 @@ class _MyHomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

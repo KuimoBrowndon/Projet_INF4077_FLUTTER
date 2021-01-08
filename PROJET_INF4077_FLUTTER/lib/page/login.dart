@@ -17,13 +17,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String> _loginUser(LoginData data) {
-    print("je logue man ");
+    print("Connexion : ...");
     return Future.delayed(loginTime).then((_) async {
       if (await demandeUserName(data) == false) {
-        return 'user existe pas ';
+        return "Cet utilisateur n'existe pas";
       }
       if (await demandeUserNamePass(data) == false) {
-        return 'Password does not match';
+        return 'Mot de passe incorrect.';
       }
       return null;
     });
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     print("je logue man ");
     return Future.delayed(loginTime).then((_) async {
       if (await enregistrement(data) == false) {
-        return 'user registration no';
+        return "Echec d'enregistrement.";
       }
 
       return null;
@@ -45,14 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SharedPreferences pref2 = await SharedPreferences.getInstance();
 
-    return await pref2.setString("password", data.password) &&
-        await pref.setString("name", data.name);
+    return await pref2.setString("motdepasse", data.password) &&
+        await pref.setString("email", data.name);
   }
 
   Future<bool> demandeUserName(LoginData data) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-
-    String x = pref.getString("name");
+    String x = pref.getString("email");
     if (x == null) {
       return false;
     }
@@ -67,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<bool> demandeUserNamePass(LoginData data) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    String x = pref.getString("name");
-    String y = pref.getString("password");
+    String x = pref.getString("email");
+    String y = pref.getString("motdepasse");
     if (x == null || y == null) {
       return false;
     }
@@ -83,8 +82,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<bool> changePass(String username, String password) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    String x = pref.getString("name");
-    //String y=    pref.getString("password");
+    String x = pref.getString("email");
+
     if (x == null) {
       return false;
     }
@@ -94,14 +93,14 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       SharedPreferences pref2 = await SharedPreferences.getInstance();
 
-      return await pref2.setString("password", password);
+      return await pref2.setString("motdepasse", password);
     }
   }
 
   Future<String> _recoverPassword(String name) {
     return Future.delayed(loginTime).then((_) async {
       if (await changePass(name, "00000000") == false) {
-        return 'Username not exists';
+        return "Cet utilisateur n'existe pas.";
       }
       return null;
     });
@@ -111,9 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("titre"),
+        title: Text("Surveillance du Cholera"),
       ),
       body: Container(
         child: FlutterLogin(
@@ -211,19 +208,21 @@ class _LoginScreenState extends State<LoginScreen> {
           //     // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
           //   ),
           // ),
-          messages:
-              LoginMessages(recoverPasswordSuccess: "ton pas a changer man"),
+          messages: LoginMessages(
+              recoverPasswordSuccess: "Nouveau mot de passe : 00000000"),
           theme: LoginTheme(),
 
           emailValidator: (value) {
-            if (!value.contains('@') || !value.endsWith('.com')) {
-              return "Email must contain '@' and end with '.com'";
+            if (value.isEmpty) {
+              return 'Entrer votre e-mail';
+            } else if (!value.contains('@') || !value.endsWith('.com')) {
+              return "Votre E-mail doit contenir '@' et finir par '.com'";
             }
             return null;
           },
           passwordValidator: (value) {
             if (value.isEmpty) {
-              return 'entrer votre pass';
+              return 'Entrer votre mot de passe';
             }
             return null;
           },
@@ -240,12 +239,12 @@ class _LoginScreenState extends State<LoginScreen> {
             return _enregistrementUser(loginData);
           },
           onSubmitAnimationCompleted: () {
-            print('ici login ok ');
+            print('ici login ok');
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => HomePage(
-                          title: "yooo",
+                          title: "Menu Principal",
                         )));
           },
           onRecoverPassword: (name) {

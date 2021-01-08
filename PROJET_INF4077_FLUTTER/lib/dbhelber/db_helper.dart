@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:testo/models/patient.dart';
+import 'package:testo/models/patient.dart' show Patient;
 
 class DBHelper {
   static Database _db;
