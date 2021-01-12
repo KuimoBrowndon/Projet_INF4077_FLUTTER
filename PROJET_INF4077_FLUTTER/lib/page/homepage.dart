@@ -89,7 +89,7 @@ class _MyHomePageState extends State<HomePage> {
                             MaterialPageRoute(
                                 builder: (context) => StatPatient()));
                       },
-                      icon: Icons.people,
+                      icon: Icons.bar_chart,
                       libelle: 'Statistiques'),
                   ContainerCardHomePage(
                       onTap: () {
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<HomePage> {
                             MaterialPageRoute(
                                 builder: (context) => CartePatient()));
                       },
-                      icon: Icons.people,
+                      icon: Icons.map,
                       libelle: 'Carte'),
                   ContainerCardHomePage(
                       onTap: () {
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<HomePage> {
                             MaterialPageRoute(
                                 builder: (context) => LocalisationUser()));
                       },
-                      icon: Icons.people,
+                      icon: Icons.location_city,
                       libelle: 'Localisation'),
                 ],
               ),
