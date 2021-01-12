@@ -342,7 +342,7 @@ validate();
 
 
                   },
-                  child: Text("Valider"),
+                  child: update?Text("Mise a jour"):Text("Valider"),
                 ),
               ],
             ),
