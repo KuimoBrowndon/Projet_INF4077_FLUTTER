@@ -16,7 +16,7 @@ class DBHelper {
   String tablepatient = 'patient';
   String patientColid = 'id';
   String patientColphoto = 'photo';
-  String patientColidnomPrenom = 'idnomPrenom';
+  String patientColidnomPrenom = 'nomPrenom';
   String patientColage = 'age';
   String patientColtelephone = 'telephone';
   String patientColstatut = 'statut';

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:testo/dbhelber/db_helper.dart';
 import 'package:testo/models/patient.dart';
 
 class RegisterPatient extends StatefulWidget {
@@ -26,8 +27,16 @@ class RegisterPatientState extends State<RegisterPatient> {
   TextEditingController telephonecontroler = TextEditingController();
   TextEditingController agecontroler = TextEditingController();
   TextEditingController statutcontroler = TextEditingController();
+   List<String> statutlist = ["OUI", "NON"];
+  String statut = "";
   Patient patient = Patient(
-      age: 0, id: 0, nomPrenom: '', photo: '', statut: "", telephone: 0);
+      age: 0,
+      id: int.parse(
+          "${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}${DateTime.now().microsecond}"),
+      nomPrenom: '',
+      photo: '',
+      statut: "",
+      telephone: 0);
 
   DateTime value = DateTime.now();
   final format = DateFormat("yyyy-MM-dd HH:mm");
@@ -108,6 +117,40 @@ class RegisterPatientState extends State<RegisterPatient> {
       ..writeAsBytesSync(Image2.encodePng(bonneImage));
   }
 
+  clearName() {
+    setState(() {
+      _imageFile=null;
+      nomPrenomcontroler.clear();
+      nomPrenomcontroler.clear();
+      telephonecontroler.clear();
+      agecontroler.clear();
+      statutcontroler.clear();
+      statut="";
+      patient = Patient(
+          age: 0,
+          id: int.parse(
+              "${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}${DateTime.now().microsecond}"),
+          nomPrenom: '',
+          photo: '',
+          statut: "",
+          telephone: 0);
+    });
+  }
+
+  validate() {
+    print(patient.tomap());
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+
+      if (update) {
+        dbHelper.updatePatient(patient);
+      } else {
+        dbHelper.savePatient(patient);
+      }
+      clearName();
+    }
+  }
+
   form() {
     return Form(
       key: formKey,
@@ -151,18 +194,29 @@ class RegisterPatientState extends State<RegisterPatient> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 new Flexible(
-                  child: TextFormField(
-                    controller: statutcontroler,
-                    enabled: true,
-                    keyboardType: TextInputType.text,
-                    onChanged: (val) {
-                      patient.setstatut = val.toUpperCase();
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    autofocus: true,
+                    underline: Container(),
+                    items: statutlist.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      "Statut: $statut",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 20),
+                    ),
+                    onChanged: (value) {
+                    setState(() {
+                      statut=value;
+                          patient.setstatut=value;
+                        });
                     },
-
-                    decoration: InputDecoration(labelText: 'statut'),
-                    validator: (val) =>
-                        val.length == 0 ? 'Entrer le statut' : null,
-                    // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
               ],
@@ -177,7 +231,7 @@ class RegisterPatientState extends State<RegisterPatient> {
                   child: TextFormField(
                     controller: telephonecontroler,
                     enabled: true,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.phone,
                     onChanged: (val) {
                       patient.telephone = int.tryParse(val);
                     },
@@ -188,19 +242,14 @@ class RegisterPatientState extends State<RegisterPatient> {
                     // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
-              ],
+                SizedBox(
+              width: 10,
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                new Flexible(
+                    new Flexible(
                   child: TextFormField(
                     controller: agecontroler,
                     enabled: true,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     onChanged: (val) {
                       patient.age = int.tryParse(val);
                     },
@@ -210,8 +259,13 @@ class RegisterPatientState extends State<RegisterPatient> {
                     // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
+             
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -254,8 +308,39 @@ class RegisterPatientState extends State<RegisterPatient> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   color: Color.fromRGBO(135, 206, 235, 1),
-                  onPressed: () async {
-                    if (formKey.currentState.validate()) {}
+                  onPressed: (){
+
+if(patient.getstatut.length==0||patient.getphoto.length==0){
+
+
+      return showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: Text('Oupss!!!'),
+                                content: Text(
+                                    'Statut ou photo manquant '),
+                                actions: <Widget>[
+                               
+                                  new FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ]);
+                          });
+                  
+}
+
+validate();
+
+
+
+
+
+
+
                   },
                   child: Text("Valider"),
                 ),
@@ -269,6 +354,119 @@ class RegisterPatientState extends State<RegisterPatient> {
 
   bool update = false;
   bool charge = true;
+
+  DBHelper dbHelper = DBHelper();
+
+  SingleChildScrollView dataTable(List<Patient> patientList) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: DataTable(
+          //espace entre les colone
+          columnSpacing: MediaQuery.of(context).size.width / 4,
+          columns: [
+            DataColumn(
+              label: Text('NOM'),
+            ),
+            DataColumn(
+              label: Text('TELEPHONE'),
+            ),
+            DataColumn(
+              label: Text('AGE'),
+            ),
+            DataColumn(
+              label: Text('STATUT'),
+            ),
+          ],
+          rows: patientList
+              .map(
+                (patient2) => DataRow(cells: [
+                  DataCell(Text(patient2.nomPrenom), onTap: ()async {
+                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+                      
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      patient=patient2;
+                      statut=patient.getstatut;
+                      
+                    });
+                  }),
+                  DataCell(Text(patient2.gettelephone.toString()), onTap: ()async {
+                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+                      
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      patient=patient2;
+                      statut=patient.getstatut;
+                      
+                    });
+                  }),
+                  DataCell(Text(patient2.getage.toString()),  onTap: ()async {
+                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+                      
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      patient=patient2;
+                      statut=patient.getstatut;
+                      
+                    });
+                  }),
+                  DataCell(Text(patient2.getstatut.toString()),  onTap: ()async {
+                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+                      
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      patient=patient2;
+                      statut=patient.getstatut;
+                      
+                    });
+                  }),
+                ]),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  list1() {
+    return Container(
+      child: FutureBuilder(
+          future: dbHelper.getPatients(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return dataTable(snapshot.data);
+            }
+
+            if (null == snapshot.data || snapshot.data.length == 0) {
+              return Text("Aucune information disponible");
+            }
+
+            return CircularProgressIndicator();
+          }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +482,7 @@ class RegisterPatientState extends State<RegisterPatient> {
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
-            children: <Widget>[if (charge == false) form()],
+            children: <Widget>[form(), list1()],
           ),
         ));
   }
