@@ -3,7 +3,9 @@ import 'package:testo/components/container_card_homepage.dart';
 
 import '../constants copy.dart';
 import 'RegisterPatient.dart';
-import 'login.dart';
+import 'StatPatient.dart';
+import 'CartePatient.dart';
+import 'LocalisationUser.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -24,7 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-  int _counter = 0;
+  /*int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -35,7 +37,7 @@ class _MyHomePageState extends State<HomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-  }
+  }*/
 
   Size size;
   Color color;
@@ -85,7 +87,7 @@ class _MyHomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                                builder: (context) => StatPatient()));
                       },
                       icon: Icons.people,
                       libelle: 'Statistiques'),
@@ -94,10 +96,19 @@ class _MyHomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                                builder: (context) => CartePatient()));
                       },
                       icon: Icons.people,
-                      libelle: 'Deconnexion'),
+                      libelle: 'Carte'),
+                  ContainerCardHomePage(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LocalisationUser()));
+                      },
+                      icon: Icons.people,
+                      libelle: 'Localisation'),
                 ],
               ),
             ),

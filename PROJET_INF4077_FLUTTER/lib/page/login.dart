@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return "Cet utilisateur n'existe pas";
       }
       if (await demandeUserNamePass(data) == false) {
-        return 'Mot de passe incorrect.';
+        return 'Emal ou Mot de passe incorrect.';
       }
       return null;
     });
@@ -72,10 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
       return false;
     }
 
-    if (x != data.name && y != data.password) {
-      return false;
-    } else {
+    if (x == data.name && y == data.password) {
       return true;
+    } else {
+      return false;
     }
   }
 

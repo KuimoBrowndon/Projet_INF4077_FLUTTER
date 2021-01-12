@@ -57,7 +57,7 @@ class RegisterPatientState extends State<RegisterPatient> {
         fit: BoxFit.fill,
       );
     } else {
-      return Text('Choisir un logo', style: TextStyle(fontSize: 18.0));
+      return Text('Choisir une image', style: TextStyle(fontSize: 18.0));
     }
   }
 
@@ -278,7 +278,7 @@ class RegisterPatientState extends State<RegisterPatient> {
           centerTitle: true,
           title: new Text(
             'Gestion des Patients',
-            style: TextStyle(fontSize: 30.0),
+            style: TextStyle(fontSize: 25.0),
           ),
         ),
         body: SingleChildScrollView(
