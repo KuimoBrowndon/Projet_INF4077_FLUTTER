@@ -6,6 +6,7 @@ import 'RegisterPatient.dart';
 import 'StatPatient.dart';
 import 'LocalisationUser.dart';
 import 'login.dart';
+import 'Suivi.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -103,10 +104,8 @@ class _MyHomePageState extends State<HomePage> {
                   ContainerCardHomePage(
                       onTap: () {
                         print('Déconnexion');
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Suivi()));
                       },
                       icon: Icons.logout,
                       libelle: 'Déconnexion'),

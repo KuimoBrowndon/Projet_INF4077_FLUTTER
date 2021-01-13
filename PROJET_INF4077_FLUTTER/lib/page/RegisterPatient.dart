@@ -351,7 +351,7 @@ class RegisterPatientState extends State<RegisterPatient> {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -387,6 +387,9 @@ class RegisterPatientState extends State<RegisterPatient> {
                         ))),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -417,7 +420,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                                 ]);
                           });
                     }
-
                     validate();
                   },
                   child: update ? Text("Mise a jour") : Text("Valider"),
@@ -472,7 +474,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
@@ -570,7 +571,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();

@@ -111,10 +111,10 @@ class DBHelper {
         where: '$suivipatientColid = ?', whereArgs: [id]);
   }
 
-  Future<int> updateSuiviPatient(SuiviPatient suiviPatientatient) async {
+  Future<int> updateSuiviPatient(SuiviPatient suivipatient) async {
     var dbPatient = await db;
-    return await dbPatient.update(tablesuivipatient, suiviPatientatient.tomap(),
-        where: '$suivipatientColid = ?', whereArgs: [suiviPatientatient.id]);
+    return await dbPatient.update(tablesuivipatient, suivipatient.tomap(),
+        where: '$suivipatientColid = ?', whereArgs: [suivipatient.id]);
   }
 
   Future close() async {

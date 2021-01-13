@@ -65,7 +65,8 @@ class SuiviPatient {
   Map<String, dynamic> tomap() {
     var map = Map<String, dynamic>();
     map['id'] = id;
-    map['dateHeure'] = this.dateHeure;
+    map['idpatient'] = this.idpatient;
+    map['dateHeure'] = this.dateHeure.toString();
     map['deshydratation'] = this.deshydratation;
     map['selles'] = this.selles;
     map['vomissements'] = this.vomissements;
@@ -76,7 +77,8 @@ class SuiviPatient {
   //demapselles de mon client
   SuiviPatient.frommap(Map<String, dynamic> map) {
     this.id = map['id'];
-    this.dateHeure = map['dateHeure'];
+    this.idpatient = map['idpatient'];
+    this.dateHeure = DateTime.parse(map['dateHeure'].toString());
     this.deshydratation = map['deshydratation'];
     this.selles = map['selles'];
     this.vomissements = map['vomissements'];
