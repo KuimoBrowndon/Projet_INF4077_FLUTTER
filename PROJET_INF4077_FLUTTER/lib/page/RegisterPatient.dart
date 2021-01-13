@@ -24,16 +24,35 @@ class RegisterPatientState extends State<RegisterPatient> {
   }
 
   TextEditingController nomPrenomcontroler = TextEditingController();
+  TextEditingController sexecontroler = TextEditingController();
+  TextEditingController regioncontroler = TextEditingController();
   TextEditingController telephonecontroler = TextEditingController();
   TextEditingController agecontroler = TextEditingController();
   TextEditingController statutcontroler = TextEditingController();
-   List<String> statutlist = ["OUI", "NON"];
+  List<String> statutlist = ["Suspect", "Confirmé"];
+  List<String> sexelist = ["F", "M"];
+  List<String> regionlist = [
+    "Adamaoua",
+    "Centre",
+    "Est",
+    "Extrême-Nord",
+    "Littoral",
+    "Nord",
+    "Nord-Ouest",
+    "Ouest",
+    "Sud",
+    "Sud-Ouest"
+  ];
   String statut = "";
+  String region = "";
+  String sexe = "";
   Patient patient = Patient(
       age: 0,
       id: int.parse(
           "${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}${DateTime.now().microsecond}"),
       nomPrenom: '',
+      sexe: '',
+      region: '',
       photo: '',
       statut: "",
       telephone: 0);
@@ -119,18 +138,25 @@ class RegisterPatientState extends State<RegisterPatient> {
 
   clearName() {
     setState(() {
-      _imageFile=null;
+      update = false;
+      _imageFile = null;
       nomPrenomcontroler.clear();
       nomPrenomcontroler.clear();
+      sexecontroler.clear();
+      regioncontroler.clear();
       telephonecontroler.clear();
       agecontroler.clear();
       statutcontroler.clear();
-      statut="";
+      statut = "";
+      sexe = "";
+      region = "";
       patient = Patient(
           age: 0,
           id: int.parse(
               "${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}${DateTime.now().microsecond}"),
           nomPrenom: '',
+          sexe: "",
+          region: "",
           photo: '',
           statut: "",
           telephone: 0);
@@ -176,9 +202,9 @@ class RegisterPatientState extends State<RegisterPatient> {
                       patient.nomPrenom = val.toUpperCase();
                     },
 
-                    decoration: InputDecoration(labelText: 'nomPrenom'),
+                    decoration: InputDecoration(labelText: 'Nom et Prénom'),
                     validator: (val) =>
-                        val.length == 0 ? 'Entrer le nomPrenom' : null,
+                        val.length == 0 ? 'Entrer le nom et le prenom' : null,
                     // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
@@ -205,17 +231,80 @@ class RegisterPatientState extends State<RegisterPatient> {
                       );
                     }).toList(),
                     hint: Text(
-                      "Statut: $statut",
+                      "Statut : $statut",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                           color: Colors.black,
-                          fontSize: 20),
+                          fontSize: 16),
                     ),
                     onChanged: (value) {
-                    setState(() {
-                      statut=value;
-                          patient.setstatut=value;
-                        });
+                      setState(() {
+                        statut = value;
+                        patient.setstatut = value;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                new Flexible(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    autofocus: true,
+                    underline: Container(),
+                    items: sexelist.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      "Sexe : $sexe",
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          fontSize: 16),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        sexe = value;
+                        patient.setsexe = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                new Flexible(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    autofocus: true,
+                    underline: Container(),
+                    items: regionlist.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      "Région : $region",
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          fontSize: 16),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        region = value;
+                        patient.setregion = value;
+                      });
                     },
                   ),
                 ),
@@ -236,16 +325,16 @@ class RegisterPatientState extends State<RegisterPatient> {
                       patient.telephone = int.tryParse(val);
                     },
 
-                    decoration: InputDecoration(labelText: 'telephone'),
+                    decoration: InputDecoration(labelText: 'Téléphone'),
                     validator: (val) =>
-                        val.length == 0 ? 'Entrer le telephone' : null,
+                        val.length == 0 ? 'Entrer le téléphone' : null,
                     // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
                 SizedBox(
-              width: 10,
-            ),
-                    new Flexible(
+                  width: 10,
+                ),
+                new Flexible(
                   child: TextFormField(
                     controller: agecontroler,
                     enabled: true,
@@ -254,18 +343,16 @@ class RegisterPatientState extends State<RegisterPatient> {
                       patient.age = int.tryParse(val);
                     },
 
-                    decoration: InputDecoration(labelText: 'age'),
-                    validator: (val) => val.length == 0 ? 'Entrer l age' : null,
+                    decoration: InputDecoration(labelText: 'Age'),
+                    validator: (val) => val.length == 0 ? "Entrer l'age" : null,
                     // onSaved: (val) => stock.nomPrenomstock = val,
                   ),
                 ),
-             
               ],
             ),
             SizedBox(
               height: 10,
             ),
-           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -308,20 +395,19 @@ class RegisterPatientState extends State<RegisterPatient> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   color: Color.fromRGBO(135, 206, 235, 1),
-                  onPressed: (){
-
-if(patient.getstatut.length==0||patient.getphoto.length==0){
-
-
-      return showDialog(
+                  onPressed: () {
+                    if (patient.getstatut.length == 0 ||
+                        patient.getphoto.length == 0 ||
+                        patient.getregion.length == 0 ||
+                        patient.getsexe.length == 0) {
+                      return showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
                                 title: Text('Oupss!!!'),
                                 content: Text(
-                                    'Statut ou photo manquant '),
+                                    'Statut ou photo ou sexe ou région manquant(s)'),
                                 actions: <Widget>[
-                               
                                   new FlatButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
@@ -330,19 +416,11 @@ if(patient.getstatut.length==0||patient.getphoto.length==0){
                                   ),
                                 ]);
                           });
-                  
-}
+                    }
 
-validate();
-
-
-
-
-
-
-
+                    validate();
                   },
-                  child: update?Text("Mise a jour"):Text("Valider"),
+                  child: update ? Text("Mise a jour") : Text("Valider"),
                 ),
               ],
             ),
@@ -363,11 +441,17 @@ validate();
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: DataTable(
-          //espace entre les colone
-          columnSpacing: MediaQuery.of(context).size.width / 4,
+          //espace entre les colonnes
+          columnSpacing: MediaQuery.of(context).size.width / 6,
           columns: [
             DataColumn(
-              label: Text('NOM'),
+              label: Text('NOM ET PRENOM'),
+            ),
+            DataColumn(
+              label: Text('SEXE'),
+            ),
+            DataColumn(
+              label: Text('REGION'),
             ),
             DataColumn(
               label: Text('TELEPHONE'),
@@ -382,64 +466,121 @@ validate();
           rows: patientList
               .map(
                 (patient2) => DataRow(cells: [
-                  DataCell(Text(patient2.nomPrenom), onTap: ()async {
-                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                  DataCell(Text(patient2.nomPrenom), onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-                      
+
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
                       statutcontroler.text = patient2.getstatut;
-                      patient=patient2;
-                      statut=patient.getstatut;
-                      
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
                     });
                   }),
-                  DataCell(Text(patient2.gettelephone.toString()), onTap: ()async {
-                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                  DataCell(Text(patient2.getsexe.toString()), onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-                      
+
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
                       statutcontroler.text = patient2.getstatut;
-                      patient=patient2;
-                      statut=patient.getstatut;
-                      
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
                     });
                   }),
-                  DataCell(Text(patient2.getage.toString()),  onTap: ()async {
-                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                  DataCell(Text(patient2.getregion.toString()),
+                      onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-                      
+
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
                       statutcontroler.text = patient2.getstatut;
-                      patient=patient2;
-                      statut=patient.getstatut;
-                      
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
                     });
                   }),
-                  DataCell(Text(patient2.getstatut.toString()),  onTap: ()async {
-                    _imageFile=File("${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                  DataCell(Text(patient2.gettelephone.toString()),
+                      onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-                      
+
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
                       statutcontroler.text = patient2.getstatut;
-                      patient=patient2;
-                      statut=patient.getstatut;
-                      
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
+                    });
+                  }),
+                  DataCell(Text(patient2.getage.toString()), onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
+                    });
+                  }),
+                  DataCell(Text(patient2.getstatut.toString()),
+                      onTap: () async {
+                    _imageFile = File(
+                        "${(await getApplicationDocumentsDirectory()).path}/${patient2.getphoto}");
+                    setState(() {
+                      update = true;
+                      nomPrenomcontroler.text = patient2.nomPrenom;
+
+                      telephonecontroler.text =
+                          patient2.gettelephone.toString();
+                      agecontroler.text = patient2.getage.toString();
+                      statutcontroler.text = patient2.getstatut;
+                      sexecontroler.text = patient2.getsexe;
+                      regioncontroler.text = patient2.getregion;
+                      patient = patient2;
+                      statut = patient.getstatut;
+                      sexe = patient.getsexe;
+                      region = patient.getregion;
                     });
                   }),
                 ]),

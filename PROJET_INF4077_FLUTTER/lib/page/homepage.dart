@@ -4,8 +4,8 @@ import 'package:testo/components/container_card_homepage.dart';
 import '../constants copy.dart';
 import 'RegisterPatient.dart';
 import 'StatPatient.dart';
-import 'CartePatient.dart';
 import 'LocalisationUser.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -96,19 +96,20 @@ class _MyHomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CartePatient()));
-                      },
-                      icon: Icons.map,
-                      libelle: 'Carte'),
-                  ContainerCardHomePage(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
                                 builder: (context) => LocalisationUser()));
                       },
                       icon: Icons.location_city,
                       libelle: 'Localisation'),
+                  ContainerCardHomePage(
+                      onTap: () {
+                        print('Déconnexion');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      icon: Icons.logout,
+                      libelle: 'Déconnexion'),
                 ],
               ),
             ),

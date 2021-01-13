@@ -10,12 +10,12 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testo/models/patient.dart';
 
-class CartePatient extends StatefulWidget {
+class Suivi extends StatefulWidget {
   @override
-  CartePatientState createState() => CartePatientState();
+  SuiviState createState() => SuiviState();
 }
 
-class CartePatientState extends State<CartePatient> {
+class SuiviState extends State<Suivi> {
   final formKey = new GlobalKey<FormState>();
 
   void initState() {
@@ -29,7 +29,7 @@ class CartePatientState extends State<CartePatient> {
         appBar: new AppBar(
           centerTitle: true,
           title: new Text(
-            'Carte',
+            "Suivi d'un Patient",
             style: TextStyle(fontSize: 25.0),
           ),
         ),
