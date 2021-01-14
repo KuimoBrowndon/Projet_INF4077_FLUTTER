@@ -7,6 +7,7 @@ import 'StatPatient.dart';
 import 'LocalisationUser.dart';
 import 'login.dart';
 import 'Suivi.dart';
+import 'PatienListe.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -103,12 +104,12 @@ class _MyHomePageState extends State<HomePage> {
                       libelle: 'Localisation'),
                   ContainerCardHomePage(
                       onTap: () {
-                        print('Déconnexion');
+                       
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Suivi()));
+                            MaterialPageRoute(builder: (context) => PatienListe()));
                       },
                       icon: Icons.logout,
-                      libelle: 'Déconnexion'),
+                      libelle: 'Parametre liste'),
                 ],
               ),
             ),

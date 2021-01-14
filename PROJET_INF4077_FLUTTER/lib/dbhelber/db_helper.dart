@@ -93,9 +93,9 @@ class DBHelper {
     return await dbPatient.insert(tablesuivipatient, suiviPatient.tomap());
   }
 
-  Future<List<SuiviPatient>> getSuiviPatient() async {
+  Future<List<SuiviPatient>> getSuiviPatient(int idPatient) async {
     Database db = await this.db;
-    var result = await db.rawQuery('SELECT * FROM $tablesuivipatient');
+    var result = await db.rawQuery("SELECT * FROM $tablesuivipatient  WHERE $suivipatientColidpatient='$idPatient'");
     List<SuiviPatient> ts = [];
     if (result.length > 0) {
       for (int i = 0; i < result.length; i++) {

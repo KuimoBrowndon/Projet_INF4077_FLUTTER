@@ -6,8 +6,12 @@ import 'package:testo/dbhelber/db_helper.dart';
 import 'package:testo/models/patient.dart';
 import 'package:testo/models/SuiviPatient.dart';
 
+
+// ignore: must_be_immutable
 class Suivi extends StatefulWidget {
-  @override
+  Patient patient;
+  Suivi(this.patient);
+ 
   SuiviState createState() => SuiviState();
 }
 
@@ -63,6 +67,7 @@ class SuiviState extends State<Suivi> {
   validate() {
     print(suivipatient.tomap());
     if (formKey.currentState.validate()) {
+    suivipatient.idpatient=  widget.patient.id;
       formKey.currentState.save();
       if (update) {
         suivipatient.setdateHeure = DateTime.now();
@@ -340,7 +345,7 @@ class SuiviState extends State<Suivi> {
   list1() {
     return Container(
       child: FutureBuilder(
-          future: dbHelper.getSuiviPatient(),
+          future: dbHelper.getSuiviPatient(widget.patient.id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return dataTable(snapshot.data);
