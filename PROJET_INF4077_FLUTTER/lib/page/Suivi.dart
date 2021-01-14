@@ -1,23 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:testo/dbhelber/db_helper.dart';
 import 'package:testo/models/patient.dart';
 import 'package:testo/models/SuiviPatient.dart';
-
 
 // ignore: must_be_immutable
 class Suivi extends StatefulWidget {
   Patient patient;
   Suivi(this.patient);
- 
   SuiviState createState() => SuiviState();
 }
 
 class SuiviState extends State<Suivi> {
   final formKey = new GlobalKey<FormState>();
-
   void initState() {
     super.initState();
   }
@@ -40,7 +36,6 @@ class SuiviState extends State<Suivi> {
 
   DateTime value = DateTime.now();
   final format = DateFormat("yyyy-MM-dd HH:mm");
-
   String textErrorDateentre = "";
   bool testDateentre = false;
   DateTime dateentre = DateTime.now();
@@ -67,7 +62,7 @@ class SuiviState extends State<Suivi> {
   validate() {
     print(suivipatient.tomap());
     if (formKey.currentState.validate()) {
-    suivipatient.idpatient=  widget.patient.id;
+      suivipatient.idpatient = widget.patient.id;
       formKey.currentState.save();
       if (update) {
         suivipatient.setdateHeure = DateTime.now();
@@ -233,7 +228,6 @@ class SuiviState extends State<Suivi> {
 
   bool update = false;
   bool charge = true;
-
   DBHelper dbHelper = DBHelper();
 
   SingleChildScrollView dataTable(List<SuiviPatient> suivipatientList) {
@@ -354,7 +348,6 @@ class SuiviState extends State<Suivi> {
             if (snapshot.data == null || snapshot.data.length == 0) {
               return Text("Aucune information disponible");
             }
-
             return CircularProgressIndicator();
           }),
     );

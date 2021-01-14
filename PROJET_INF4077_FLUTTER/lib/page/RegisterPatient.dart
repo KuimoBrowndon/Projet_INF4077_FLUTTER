@@ -56,10 +56,8 @@ class RegisterPatientState extends State<RegisterPatient> {
       photo: '',
       statut: "",
       telephone: 0);
-
   DateTime value = DateTime.now();
   final format = DateFormat("yyyy-MM-dd HH:mm");
-
   String textErrorDateentre = "";
   bool testDateentre = false;
   DateTime dateentre = DateTime.now();
@@ -127,7 +125,6 @@ class RegisterPatientState extends State<RegisterPatient> {
     patient.photo = filename;
     Image2.Image image =
         Image2.decodeImage(new Io.File(imagefile.path).readAsBytesSync());
-
     // Resize the image to a 120x? thumbnail (maintaining the aspect ratio).
     Image2.Image bonneImage = Image2.copyResize(image, width: 200, height: 200);
     String dir = (await getApplicationDocumentsDirectory()).path;
@@ -167,7 +164,6 @@ class RegisterPatientState extends State<RegisterPatient> {
     print(patient.tomap());
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-
       if (update) {
         dbHelper.updatePatient(patient);
       } else {
@@ -183,9 +179,6 @@ class RegisterPatientState extends State<RegisterPatient> {
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //mainAxisSize: MainAxisSize.min,
-          //verticalDirection: VerticalDirection.down,
           children: <Widget>[
             const SizedBox(
               height: 1,
@@ -201,7 +194,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     onChanged: (val) {
                       patient.nomPrenom = val.toUpperCase();
                     },
-
                     decoration: InputDecoration(labelText: 'Nom et Prénom'),
                     validator: (val) =>
                         val.length == 0 ? 'Entrer le nom et le prenom' : null,
@@ -324,7 +316,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     onChanged: (val) {
                       patient.telephone = int.tryParse(val);
                     },
-
                     decoration: InputDecoration(labelText: 'Téléphone'),
                     validator: (val) =>
                         val.length == 0 ? 'Entrer le téléphone' : null,
@@ -342,7 +333,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     onChanged: (val) {
                       patient.age = int.tryParse(val);
                     },
-
                     decoration: InputDecoration(labelText: 'Age'),
                     validator: (val) => val.length == 0 ? "Entrer l'age" : null,
                     // onSaved: (val) => stock.nomPrenomstock = val,
@@ -434,7 +424,6 @@ class RegisterPatientState extends State<RegisterPatient> {
 
   bool update = false;
   bool charge = true;
-
   DBHelper dbHelper = DBHelper();
 
   SingleChildScrollView dataTable(List<Patient> patientList) {
@@ -492,7 +481,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
@@ -512,7 +500,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
@@ -532,7 +519,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
@@ -551,7 +537,6 @@ class RegisterPatientState extends State<RegisterPatient> {
                     setState(() {
                       update = true;
                       nomPrenomcontroler.text = patient2.nomPrenom;
-
                       telephonecontroler.text =
                           patient2.gettelephone.toString();
                       agecontroler.text = patient2.getage.toString();
@@ -599,11 +584,9 @@ class RegisterPatientState extends State<RegisterPatient> {
             if (snapshot.hasData) {
               return dataTable(snapshot.data);
             }
-
             if (null == snapshot.data || snapshot.data.length == 0) {
               return Text("Aucune information disponible");
             }
-
             return CircularProgressIndicator();
           }),
     );
@@ -611,12 +594,11 @@ class RegisterPatientState extends State<RegisterPatient> {
 
   @override
   Widget build(BuildContext context) {
-    double longueur = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: new AppBar(
           centerTitle: true,
           title: new Text(
-            'Gestion des Patients',
+            'Enregistrement des Patients',
             style: TextStyle(fontSize: 25.0),
           ),
         ),

@@ -24,7 +24,6 @@ class LocalisationUserState extends State<LocalisationUser> {
 
   @override
   Widget build(BuildContext context) {
-    double longueur = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: new AppBar(
           centerTitle: true,
