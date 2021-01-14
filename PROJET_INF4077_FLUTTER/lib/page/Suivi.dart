@@ -64,8 +64,8 @@ class SuiviState extends State<Suivi> {
     print(suivipatient.tomap());
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-
       if (update) {
+        suivipatient.setdateHeure = DateTime.now();
         dbHelper.updateSuiviPatient(suivipatient);
       } else {
         dbHelper.saveSuiviPatient(suivipatient);
@@ -312,6 +312,7 @@ class SuiviState extends State<Suivi> {
                           suivipatient2.getvomissements.toString();
                       diarrheecontroler.text =
                           suivipatient2.getdiarrhee.toString();
+                      suivipatient = suivipatient2;
                     });
                   }),
                   DataCell(Text(suivipatient2.getdiarrhee.toString()),
