@@ -1,14 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Patch2;
-import 'dart:io' as Io;
-import 'package:image/image.dart' as Image2;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:testo/models/patient.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class StatPatient extends StatefulWidget {
   @override
@@ -24,7 +16,54 @@ class StatPatientState extends State<StatPatient> {
 
   @override
   Widget build(BuildContext context) {
-    double longueur = MediaQuery.of(context).size.height;
+    var data = [
+      GraphiqueData("Adamaoua", 2, Colors.green),
+      GraphiqueData("Centre", 1, Colors.green),
+      GraphiqueData("Est", 1, Colors.green),
+      GraphiqueData("Extrême-Nord", 1, Colors.green),
+      GraphiqueData("Littoral", 1, Colors.green),
+      GraphiqueData("Nord", 0, Colors.green),
+      GraphiqueData("Nord-Ouest", 1, Colors.green),
+      GraphiqueData("Ouest", 0, Colors.green),
+      GraphiqueData("Sud", 1, Colors.green),
+      GraphiqueData("Sud-Ouest", 3, Colors.green),
+    ];
+    var data1 = [
+      GraphiqueData("Suspect", 7, Colors.red),
+      GraphiqueData("Confirmé", 4, Colors.red),
+    ];
+    var series = [
+      charts.Series(
+          domainFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.nature,
+          measureFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.valeur,
+          colorFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.color,
+          id: "GraphiqueData",
+          data: data,
+          labelAccessorFn: (GraphiqueData GraphiqueData, _) =>
+              '${GraphiqueData.nature} : ${GraphiqueData.valeur.toString()}')
+    ];
+    var series1 = [
+      charts.Series(
+          domainFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.nature,
+          measureFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.valeur,
+          colorFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.color,
+          id: "GraphiqueData",
+          data: data1,
+          labelAccessorFn: (GraphiqueData GraphiqueData, _) =>
+              '${GraphiqueData.nature} : ${GraphiqueData.valeur.toString()}')
+    ];
+    var chart = charts.BarChart(
+      series,
+      vertical: false,
+      barRendererDecorator: charts.BarLabelDecorator<String>(),
+    );
+    var chart1 = charts.PieChart(
+      series1,
+      defaultRenderer: charts.ArcRendererConfig(
+          arcRendererDecorators: [charts.ArcLabelDecorator()], arcWidth: 80),
+      animate: true,
+    );
+
     return Scaffold(
         appBar: new AppBar(
           centerTitle: true,
@@ -34,7 +73,42 @@ class StatPatientState extends State<StatPatient> {
           ),
         ),
         body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-        ));
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Statistiques par région',
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 275,
+                    child: chart,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Statistiques par statut des patients',
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 275,
+                    child: chart1,
+                  ),
+                ],
+              ),
+            )));
   }
+}
+
+class GraphiqueData {
+  final String nature;
+  final int valeur;
+  final charts.Color color;
+
+  GraphiqueData(this.nature, this.valeur, Color color)
+      : this.color = charts.Color(
+            g: color.green, r: color.red, a: color.alpha, b: color.blue);
 }

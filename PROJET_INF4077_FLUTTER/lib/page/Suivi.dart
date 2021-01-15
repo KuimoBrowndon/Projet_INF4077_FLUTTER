@@ -359,7 +359,7 @@ class SuiviState extends State<Suivi> {
         appBar: new AppBar(
           centerTitle: true,
           title: new Text(
-            "Suivi d'un patient",
+            "Suivi de ${widget.patient.getnomPrenom}",
             style: TextStyle(fontSize: 25.0),
           ),
         ),

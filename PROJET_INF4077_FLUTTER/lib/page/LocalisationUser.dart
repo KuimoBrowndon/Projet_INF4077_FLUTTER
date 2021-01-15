@@ -1,14 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Patch2;
-import 'dart:io' as Io;
-import 'package:image/image.dart' as Image2;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:testo/models/patient.dart';
+import 'package:geolocation/geolocation.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 
 class LocalisationUser extends StatefulWidget {
   @override
@@ -22,6 +16,41 @@ class LocalisationUserState extends State<LocalisationUser> {
     super.initState();
   }
 
+  MapController controller = new MapController();
+
+  getPermission() async {
+    final GeolocationResult result =
+        await Geolocation.requestLocationPermission(
+            permission: const LocationPermission(
+                android: LocationPermissionAndroid.fine,
+                ios: LocationPermissionIOS.always));
+    return result;
+  }
+
+  getLocation() {
+    getPermission().then((result) async {
+      if (result.isSuccessful) {
+        final coords =
+            // ignore: await_only_futures
+            await Geolocation.currentLocation(accuracy: LocationAccuracy.best);
+        print(coords);
+        return coords;
+      }
+    });
+  }
+
+  buildMap() {
+    getLocation().then((response) {
+      if (response.isSuccessful) {
+        response.listen((value) {
+          controller.move(
+              new LatLng(value.Location.latitude, value.location.longitude),
+              15.0);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +61,14 @@ class LocalisationUserState extends State<LocalisationUser> {
             style: TextStyle(fontSize: 25.0),
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-        ));
+        body: new FlutterMap(
+            mapController: controller,
+            options: new MapOptions(center: buildMap(), minZoom: 5.0),
+            layers: [
+              new TileLayerOptions(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c']),
+            ]));
   }
 }

@@ -6,6 +6,7 @@ import 'StatPatient.dart';
 import 'LocalisationUser.dart';
 import 'login.dart';
 import 'PatienListe.dart';
+import 'SendSms.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -91,6 +92,13 @@ class _MyHomePageState extends State<HomePage> {
                       },
                       icon: Icons.location_city,
                       libelle: 'Localisation'),
+                  ContainerCardHomePage(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SendSms()));
+                      },
+                      icon: Icons.sms,
+                      libelle: 'SMS'),
                   ContainerCardHomePage(
                       onTap: () {
                         Navigator.pushReplacement(
