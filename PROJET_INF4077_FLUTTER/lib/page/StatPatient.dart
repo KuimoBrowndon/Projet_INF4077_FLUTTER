@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:testo/dbhelber/db_helper.dart';
+import 'package:testo/models/statbyregion.dart' show Statbyregion;
+import 'package:testo/models/statbystatut.dart' show Statbystatut;
 
 class StatPatient extends StatefulWidget {
   @override
@@ -16,22 +19,28 @@ class StatPatientState extends State<StatPatient> {
 
   @override
   Widget build(BuildContext context) {
-    var data = [
-      GraphiqueData("Adamaoua", 2, Colors.green),
-      GraphiqueData("Centre", 1, Colors.green),
-      GraphiqueData("Est", 1, Colors.green),
-      GraphiqueData("Extrême-Nord", 1, Colors.green),
-      GraphiqueData("Littoral", 1, Colors.green),
-      GraphiqueData("Nord", 0, Colors.green),
-      GraphiqueData("Nord-Ouest", 1, Colors.green),
-      GraphiqueData("Ouest", 0, Colors.green),
-      GraphiqueData("Sud", 1, Colors.green),
-      GraphiqueData("Sud-Ouest", 3, Colors.green),
-    ];
-    var data1 = [
-      GraphiqueData("Suspect", 7, Colors.red),
-      GraphiqueData("Confirmé", 4, Colors.red),
-    ];
+    var data;
+    var data1;
+    if (data == null) {
+      data = [
+        GraphiqueData("Adamaoua", 0, Colors.green),
+        GraphiqueData("Centre", 12, Colors.green),
+        GraphiqueData("Est", 5, Colors.green),
+        GraphiqueData("Extrême-Nord", 3, Colors.green),
+        GraphiqueData("Littoral", 6, Colors.green),
+        GraphiqueData("Nord", 2, Colors.green),
+        GraphiqueData("Nord-Ouest", 3, Colors.green),
+        GraphiqueData("Ouest", 5, Colors.green),
+        GraphiqueData("Sud", 2, Colors.green),
+        GraphiqueData("Sud-Ouest", 0, Colors.green),
+      ];
+    }
+    if (data1 == null) {
+      data1 = [
+        GraphiqueData("Confirmé", 15, Colors.red),
+        GraphiqueData("Suspect", 23, Colors.red),
+      ];
+    }
     var series = [
       charts.Series(
           domainFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.nature,

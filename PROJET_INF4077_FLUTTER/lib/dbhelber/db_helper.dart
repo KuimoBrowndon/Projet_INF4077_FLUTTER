@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testo/models/patient.dart' show Patient;
 import 'package:testo/models/SuiviPatient.dart' show SuiviPatient;
+import 'package:testo/models/statbystatut.dart' show Statbystatut;
+import 'package:testo/models/statbyregion.dart' show Statbyregion;
 
 class DBHelper {
   static Database _db;
@@ -95,7 +96,8 @@ class DBHelper {
 
   Future<List<SuiviPatient>> getSuiviPatient(int idPatient) async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tablesuivipatient  WHERE $suivipatientColidpatient='$idPatient'");
+    var result = await db.rawQuery(
+        "SELECT * FROM $tablesuivipatient  WHERE $suivipatientColidpatient='$idPatient'");
     List<SuiviPatient> ts = [];
     if (result.length > 0) {
       for (int i = 0; i < result.length; i++) {
@@ -115,6 +117,32 @@ class DBHelper {
     var dbPatient = await db;
     return await dbPatient.update(tablesuivipatient, suivipatient.tomap(),
         where: '$suivipatientColid = ?', whereArgs: [suivipatient.id]);
+  }
+
+  Future<List<Statbystatut>> getStatByStatut() async {
+    Database db = await this.db;
+    var result = await db.rawQuery(
+        'SELECT statut, COUNT(*) as nbre FROM $tablepatient GROUP BY statut ORDER BY statut ASC');
+    List<Statbystatut> ts = [];
+    if (result.length > 0) {
+      for (int i = 0; i < result.length; i++) {
+        ts.add(Statbystatut.frommap(result[i]));
+      }
+    }
+    return ts;
+  }
+
+  Future<List<Statbyregion>> getStatByRegion() async {
+    Database db = await this.db;
+    var result = await db.rawQuery(
+        'SELECT region, COUNT(*) as nbre FROM $tablepatient GROUP BY region ORDER BY region ASC');
+    List<Statbyregion> ts = [];
+    if (result.length > 0) {
+      for (int i = 0; i < result.length; i++) {
+        ts.add(Statbyregion.frommap(result[i]));
+      }
+    }
+    return ts;
   }
 
   Future close() async {

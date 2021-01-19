@@ -28,12 +28,11 @@ class LocalisationUserState extends State<LocalisationUser> {
   }
 
   getLocation() {
-    getPermission().then((result) async {
+    return getPermission().then((result) async {
       if (result.isSuccessful) {
-        final coords =
+        var coords =
             // ignore: await_only_futures
             await Geolocation.currentLocation(accuracy: LocationAccuracy.best);
-        print(coords);
         return coords;
       }
     });
@@ -61,6 +60,20 @@ class LocalisationUserState extends State<LocalisationUser> {
             style: TextStyle(fontSize: 25.0),
           ),
         ),
+        /*body: Center(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Localiser',
+                style: TextStyle(color: Colors.indigo, fontSize: 25),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );*/
         body: new FlutterMap(
             mapController: controller,
             options: new MapOptions(center: buildMap(), minZoom: 5.0),
