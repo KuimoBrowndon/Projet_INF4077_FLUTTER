@@ -15,12 +15,34 @@ class StatPatientState extends State<StatPatient> {
 
   void initState() {
     super.initState();
+    recharge();
   }
+  List<GraphiqueData> data;
+    List<GraphiqueData> data1;
+    DBHelper dbHelper = DBHelper();
+    Future<void> recharge() async {
+        setState(() {
+          charge=true;
+        });
+List<Statbyregion> statRegionList=  await  dbHelper.getStatByRegion();
+ data .clear();
+for(int i=0;i<statRegionList.length;i++){
+  data.add(GraphiqueData(statRegionList[i].getregion, statRegionList[i].getnbre, Colors.green));
+}
+List<Statbystatut> statStatbystatutList=  await  dbHelper.getStatByStatut();
+ data .clear();
+for(int i=0;i<statStatbystatutList.length;i++){
+  data1.add(GraphiqueData(statStatbystatutList[i].getstatut, statStatbystatutList[i].getnbre, Colors.red));
+}
+        setState(() {
+          charge=false;
+        });
 
+    }
+bool charge=true;
   @override
   Widget build(BuildContext context) {
-    var data;
-    var data1;
+    
     if (data == null) {
       data = [
         GraphiqueData("Adamaoua", 0, Colors.green),
@@ -91,18 +113,18 @@ class StatPatientState extends State<StatPatient> {
                     'Statistiques par région',
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
-                  SizedBox(
+               if(charge=false)   SizedBox(
                     height: 275,
                     child: chart,
                   ),
-                  SizedBox(
+              if(charge=false)    SizedBox(
                     height: 10,
                   ),
-                  Text(
+               if(charge=false)   Text(
                     'Statistiques par statut des patients',
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
-                  SizedBox(
+            if(charge=false)      SizedBox(
                     height: 275,
                     child: chart1,
                   ),
