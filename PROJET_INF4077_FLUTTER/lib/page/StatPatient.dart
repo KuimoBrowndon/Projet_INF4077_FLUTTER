@@ -17,52 +17,57 @@ class StatPatientState extends State<StatPatient> {
     super.initState();
     recharge();
   }
-  List<GraphiqueData> data;
-    List<GraphiqueData> data1;
-    DBHelper dbHelper = DBHelper();
-    Future<void> recharge() async {
-        setState(() {
-          charge=true;
-        });
-List<Statbyregion> statRegionList=  await  dbHelper.getStatByRegion();
- data .clear();
-for(int i=0;i<statRegionList.length;i++){
-  data.add(GraphiqueData(statRegionList[i].getregion, statRegionList[i].getnbre, Colors.green));
-}
-List<Statbystatut> statStatbystatutList=  await  dbHelper.getStatByStatut();
- data .clear();
-for(int i=0;i<statStatbystatutList.length;i++){
-  data1.add(GraphiqueData(statStatbystatutList[i].getstatut, statStatbystatutList[i].getnbre, Colors.red));
-}
-        setState(() {
-          charge=false;
-        });
 
-    }
-bool charge=true;
-  @override
-  Widget build(BuildContext context) {
-    
-    if (data == null) {
+  bool charge = true;
+
+  List<GraphiqueData> data = List();
+  List<GraphiqueData> data1 = List();
+  DBHelper dbHelper = DBHelper();
+  Future<void> recharge() async {
+    setState(() {
+      charge = true;
+    });
+    List<Statbyregion> statRegionList = await dbHelper.getStatByRegion();
+    data.clear();
+    if (statRegionList.length == 0) {
       data = [
         GraphiqueData("Adamaoua", 0, Colors.green),
-        GraphiqueData("Centre", 12, Colors.green),
-        GraphiqueData("Est", 5, Colors.green),
-        GraphiqueData("Extrême-Nord", 3, Colors.green),
-        GraphiqueData("Littoral", 6, Colors.green),
-        GraphiqueData("Nord", 2, Colors.green),
-        GraphiqueData("Nord-Ouest", 3, Colors.green),
-        GraphiqueData("Ouest", 5, Colors.green),
-        GraphiqueData("Sud", 2, Colors.green),
+        GraphiqueData("Centre", 0, Colors.green),
+        GraphiqueData("Est", 0, Colors.green),
+        GraphiqueData("Extrême-Nord", 0, Colors.green),
+        GraphiqueData("Littoral", 0, Colors.green),
+        GraphiqueData("Nord", 0, Colors.green),
+        GraphiqueData("Nord-Ouest", 0, Colors.green),
+        GraphiqueData("Ouest", 0, Colors.green),
+        GraphiqueData("Sud", 0, Colors.green),
         GraphiqueData("Sud-Ouest", 0, Colors.green),
       ];
+    } else {
+      for (int i = 0; i < statRegionList.length; i++) {
+        data.add(GraphiqueData(statRegionList[i].getregion,
+            statRegionList[i].getnbre, Colors.green));
+      }
     }
-    if (data1 == null) {
+    List<Statbystatut> statStatbystatutList = await dbHelper.getStatByStatut();
+    data1.clear();
+    if (statStatbystatutList.length == 0) {
       data1 = [
-        GraphiqueData("Confirmé", 15, Colors.red),
-        GraphiqueData("Suspect", 23, Colors.red),
+        GraphiqueData("Confirmé", 0, Colors.red),
+        GraphiqueData("Suspect", 0, Colors.red),
       ];
+    } else {
+      for (int i = 0; i < statStatbystatutList.length; i++) {
+        data1.add(GraphiqueData(statStatbystatutList[i].getstatut,
+            statStatbystatutList[i].getnbre, Colors.red));
+      }
     }
+    setState(() {
+      charge = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var series = [
       charts.Series(
           domainFn: (GraphiqueData GraphiqueData, _) => GraphiqueData.nature,
@@ -113,21 +118,25 @@ bool charge=true;
                     'Statistiques par région',
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
-               if(charge=false)   SizedBox(
-                    height: 275,
-                    child: chart,
-                  ),
-              if(charge=false)    SizedBox(
-                    height: 10,
-                  ),
-               if(charge=false)   Text(
-                    'Statistiques par statut des patients',
-                    style: TextStyle(color: Colors.black, fontSize: 20),
-                  ),
-            if(charge=false)      SizedBox(
-                    height: 275,
-                    child: chart1,
-                  ),
+                  if (charge == false)
+                    SizedBox(
+                      height: 275,
+                      child: chart,
+                    ),
+                  if (charge == false)
+                    SizedBox(
+                      height: 10,
+                    ),
+                  if (charge == false)
+                    Text(
+                      'Statistiques par statut des patients',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  if (charge == false)
+                    SizedBox(
+                      height: 275,
+                      child: chart1,
+                    ),
                 ],
               ),
             )));
